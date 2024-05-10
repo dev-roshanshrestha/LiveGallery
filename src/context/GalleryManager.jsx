@@ -1,14 +1,13 @@
-import React, {
-  createContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
+
+const BACKEND_SERVER = "http://localhost:1234/api/";
+
+//
 export const Gallery = createContext({
   GalleryStorage: [],
   addImg: () => {},
 });
-
+//
 const galleryReducer = (initial, action) => {
   let newItems = initial;
   if (action.type == "fake") {
@@ -56,8 +55,57 @@ function GalleryManager({ children }) {
       });
   };
 
+  const signUp = async (obj) => {
+    let sub = await fetch(`${BACKEND_SERVER}signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    let res = await sub.json();
+
+    return res;
+  };
+  const login = async (obj) => {
+    let sub = await fetch(`${BACKEND_SERVER}login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    });
+
+    let res = await sub.json();
+    console.log(res);
+    return res;
+  };
+
+  const validToken = async (token) => {
+    let sub = await fetch(`${BACKEND_SERVER}dash`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: token }),
+    });
+
+    let res = await sub.json();
+    return res;
+  };
+
   return (
-    <Gallery.Provider value={{ GalleryStorage, initialItems, addImg }}>
+    <Gallery.Provider
+      value={{
+        GalleryStorage,
+        initialItems,
+        addImg,
+        signUp,
+        login,
+        validToken,
+      }}
+    >
       <div className="container">{children}</div>
     </Gallery.Provider>
   );

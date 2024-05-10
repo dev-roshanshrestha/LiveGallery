@@ -1,4 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-*{
-    font-family: "Poppins", sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+* {
+  font-family: "Poppins", sans-serif;
+}
+.download {
+  border: 2px solid;
+  width: 100%;
+  border-radius: 30px;
+  box-shadow: 1px 1px 4px 1px rgb(12, 12, 24);
+  cursor: pointer;
+}
+.download:hover{
+    box-shadow: 1px 1px 10px 1px rgb(238, 238, 238);
+}
+.download-box {
+  position: absolute;
+  /* border: 2px solid; */
+  width: 50px;
+  right: 0px;
+  height: 40px;
+  
 }

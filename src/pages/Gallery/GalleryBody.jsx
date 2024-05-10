@@ -2,18 +2,28 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import GalleryCard from "./GalleryCard";
 import { Gallery } from "../../context/GalleryManager";
 import { useNavigate } from "react-router-dom";
+import { GetItems } from "../../services/setLocalItems";
 
 function GalleryBody() {
-  const token = localStorage.getItem("token");
+  const { GalleryStorage, addImg, validToken } = useContext(Gallery);
+
+  const token = GetItems("token");
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if (token == undefined) {
+  if (token == undefined) {
+    navigate("/login");
+  }
+  async function valid() {
+    let res = await validToken(token);
+    console.log(res.status);
+    if (res.status != "success") {
       navigate("/login");
     }
-  },[])
+  }
+  useEffect(() => {
+    valid();
+  }, []);
 
-  const { GalleryStorage, addImg } = useContext(Gallery);
   const inp = useRef();
   const [search, setSearch] = useState("");
   const searchImg = (e) => {
@@ -39,25 +49,24 @@ function GalleryBody() {
         </div>
       </div>
 
-      <div
-        className="row border"
-        style={{ height: "600px", overflow: "scroll" }}
-      >
+      <div className="row " style={{ height: "600px", overflow: "scroll" }}>
         {/* columns */}
         {GalleryStorage.map(({ img, title }, idx) => {
           return <GalleryCard img={img} desc={title} key={idx} />;
         })}
       </div>
-      <div className="container text-center mt-4">
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            addImg(search);
-          }}
-        >
-          Show More
-        </button>
-      </div>
+      {search == "" ? null : (
+        <div className="container text-center mt-4">
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              addImg(search);
+            }}
+          >
+            Show More
+          </button>
+        </div>
+      )}
     </div>
   );
 }
